@@ -33,7 +33,13 @@ resource "aws_iam_policy" "ssm_read" {
 
 data "aws_iam_policy_document" "ecr_push" {
   statement {
-    actions   = ["ecr:GetAuthorizationToken"]
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:InitiateLayerUpload",
+      "ecr:UploadLayerPart",
+      "ecr:CompleteLayerUpload",
+      "ecr:BatchCheckLayerAvailability"
+    ]
     resources = ["*"]
   }
 
