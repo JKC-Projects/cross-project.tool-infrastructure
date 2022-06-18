@@ -14,9 +14,9 @@ resource "aws_iam_role_policy_attachment" "ecr_push" {
   policy_arn = aws_iam_policy.ecr_push.arn
 }
 
-resource "aws_iam_role_policy_attachment" "ssm_read" {
+resource "aws_iam_role_policy_attachment" "ssm_read_write" {
   role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.ssm_read.arn
+  policy_arn = aws_iam_policy.ssm_read_write.arn
 }
 
 resource "aws_iam_policy" "ecr_push" {
@@ -25,10 +25,10 @@ resource "aws_iam_policy" "ecr_push" {
   policy      = data.aws_iam_policy_document.ecr_push.json
 }
 
-resource "aws_iam_policy" "ssm_read" {
-  name        = "ReadAnySSMParameter"
-  description = "Allows for the retrieval of any SSM Parameter"
-  policy      = data.aws_iam_policy_document.ssm_read.json
+resource "aws_iam_policy" "ssm_read_write" {
+  name        = "ReadWriteAnySSMParameter"
+  description = "Allows for the retrieval and writing of any SSM Parameter"
+  policy      = data.aws_iam_policy_document.ssm_read_write.json
 }
 
 data "aws_iam_policy_document" "ecr_push" {
@@ -49,9 +49,9 @@ data "aws_iam_policy_document" "ecr_push" {
   }
 }
 
-data "aws_iam_policy_document" "ssm_read" {
+data "aws_iam_policy_document" "ssm_read_write" {
   statement {
-    actions   = ["ssm:GetParameter"]
+    actions   = ["ssm:PutParameter","ssm:GetParameter","ssm:GetParameters","ssm:AddTagsToResource"]
     resources = ["arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/*"]
   }
 }
