@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "ecr_push" {
 
 data "aws_iam_policy_document" "ssm_read_write" {
   statement {
-    actions   = ["ssm:PutParameter","ssm:GetParameter","ssm:GetParameters","ssm:AddTagsToResource"]
+    actions   = ["ssm:PutParameter", "ssm:GetParameter", "ssm:GetParameters", "ssm:AddTagsToResource"]
     resources = ["arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/*"]
   }
 }
