@@ -9,6 +9,7 @@ jobs:
   deploy-development:
     name: 'Deploy into Development'
     runs-on: ubuntu-latest
+    environment: development
     env:
       TF_WORKSPACE: cross-project--tool-infrastructure-dev
 
@@ -39,6 +40,7 @@ jobs:
   deploy-production:
     name: 'Deploy into Production'
     runs-on: ubuntu-latest
+    environment: production
     env:
       TF_WORKSPACE: cross-project--tool-infrastructure-prod
 
