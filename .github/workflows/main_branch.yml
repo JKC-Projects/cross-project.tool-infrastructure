@@ -1,4 +1,4 @@
-name: 'Update Cross-Account Networking'
+name: 'Main Branch Deployment'
 
 on:
   push:
@@ -6,8 +6,38 @@ on:
     - main
 
 jobs:
-  update-cross-account-networking:
-    name: 'Update Cross-Account Netwokring'
+  deploy-development:
+    name: 'Deploy into Development'
+    runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: cross-project--tool-infrastructure-dev
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Format
+      run: terraform fmt -check -recursive
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      run: terraform plan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+
+  deploy-production:
+    name: 'Deploy into Production'
     runs-on: ubuntu-latest
     env:
       TF_WORKSPACE: cross-project--tool-infrastructure-prod

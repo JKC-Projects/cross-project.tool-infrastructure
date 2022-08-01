@@ -1,4 +1,4 @@
-name: 'Test Feature Branch'
+name: 'Feature Branch Deployment'
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
     - 'feature/**'
 
 jobs:
-  run-terraform-test:
-    name: 'Terraform Plan'
+  deploy-development:
+    name: 'Deploy into Development'
     runs-on: ubuntu-latest
     env:
       TF_WORKSPACE: cross-project--tool-infrastructure-dev
