@@ -1,6 +1,6 @@
 locals {
   github_repos_needing_aws = [
-    "JKC-Project/smalldomains.domain-manager"
+    "JKC-Projects/smalldomains.domain-manager"
   ]
 }
 
