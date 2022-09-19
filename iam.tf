@@ -1,6 +1,7 @@
 locals {
   github_repos_needing_aws = [
-    "JKC-Projects/smalldomains.domain-manager"
+    "JKC-Projects/smalldomains.domain-manager",
+    "JKC-Projects/smalldomains.web-app"
   ]
 }
 
@@ -19,6 +20,11 @@ resource "aws_iam_role_policy_attachment" "ssm_read_write" {
   policy_arn = aws_iam_policy.ssm_read_write.arn
 }
 
+resource "aws_iam_role_policy_attachment" "s3_sync" {
+  role       = aws_iam_role.github_actions.name
+  policy_arn = aws_iam_policy.s3_sync.arn
+}
+
 resource "aws_iam_policy" "ecr_push" {
   name        = "PushDockerImageToECR"
   description = "Allows for the Pushing of Docker Images to any ECR repo"
@@ -30,6 +36,13 @@ resource "aws_iam_policy" "ssm_read_write" {
   description = "Allows for the retrieval and writing of any SSM Parameter"
   policy      = data.aws_iam_policy_document.ssm_read_write.json
 }
+
+resource "aws_iam_policy" "s3_sync" {
+  name        = "ReadWriteAnyS3Sync"
+  description = "Allows for the Sync action of any S3 Bucket"
+  policy      = data.aws_iam_policy_document.s3_sync.json
+}
+
 
 data "aws_iam_policy_document" "ecr_push" {
   statement {
@@ -53,6 +66,16 @@ data "aws_iam_policy_document" "ssm_read_write" {
   statement {
     actions   = ["ssm:PutParameter", "ssm:GetParameter", "ssm:GetParameters", "ssm:AddTagsToResource"]
     resources = ["arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/*"]
+  }
+}
+
+data "aws_iam_policy_document" "s3_sync" {
+  statement {
+    actions   = ["s3:DeleteObject", "s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:PutObject"]
+    resources = [
+      "arn:aws:s3:::*",
+      "arn:aws:s3:::*/*"
+    ]
   }
 }
 
