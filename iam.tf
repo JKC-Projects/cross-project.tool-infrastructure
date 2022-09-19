@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "ssm_read_write" {
 
 data "aws_iam_policy_document" "s3_sync" {
   statement {
-    actions   = ["s3:DeleteObject", "s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:PutObject"]
+    actions = ["s3:DeleteObject", "s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:PutObject"]
     resources = [
       "arn:aws:s3:::*",
       "arn:aws:s3:::*/*"
