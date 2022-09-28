@@ -25,6 +25,11 @@ resource "aws_iam_role_policy_attachment" "s3_sync" {
   policy_arn = aws_iam_policy.s3_sync.arn
 }
 
+resource "aws_iam_role_policy_attachment" "invalidate_cloudfront_cache" {
+  role       = aws_iam_role.github_actions.name
+  policy_arn = aws_iam_policy.invalidate_cloudfront_cache.arn
+}
+
 resource "aws_iam_policy" "ecr_push" {
   name        = "PushDockerImageToECR"
   description = "Allows for the Pushing of Docker Images to any ECR repo"
@@ -41,6 +46,12 @@ resource "aws_iam_policy" "s3_sync" {
   name        = "ReadWriteAnyS3Sync"
   description = "Allows for the Sync action of any S3 Bucket"
   policy      = data.aws_iam_policy_document.s3_sync.json
+}
+
+resource "aws_iam_policy" "invalidate_cloudfront_cache" {
+  name        = "InvalidateCloudFrontCache"
+  description = "Allows GitHub Actions to Invalidate Any CloudFront Cache"
+  policy      = data.aws_iam_policy_document.invalidate_cloudfront_cache.json
 }
 
 
@@ -68,6 +79,14 @@ data "aws_iam_policy_document" "ssm_read_write" {
     resources = ["arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/*"]
   }
 }
+
+data "aws_iam_policy_document" "invalidate_cloudfront_cache" {
+  statement {
+    actions   = ["cloudfront:CreateInvalidation"]
+    resources = ["*"]
+  }
+}
+
 
 data "aws_iam_policy_document" "s3_sync" {
   statement {
